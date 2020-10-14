@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/kevinchfe/blog-service/internal/model"
 	"log"
 	"net/http"
 	"time"
@@ -15,6 +16,10 @@ func init() {
 	err := setupSetting()
 	if err != nil {
 		log.Fatalf("init.setupSetting err: %v", err)
+	}
+	err = setupDBEngine()
+	if err != nil {
+		log.Fatalf("init.setupDBEngine err: %v", err)
 	}
 }
 
@@ -37,6 +42,15 @@ func setupSetting() error {
 	}
 	global.ServerSetting.ReadTimeOut *= time.Second
 	global.ServerSetting.WriteTimeOut *= time.Second
+	return nil
+}
+
+func setupDBEngine() error {
+	var err error
+	global.DBEngine, err = model.NewDBEngine(global.DatabaseSetting)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
