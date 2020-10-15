@@ -8,6 +8,6 @@ var (
 	UnauthorizedAuthNotExist = NewError(10000003,"鉴权失败，找不到对应AppKey和AppSecrect")
 	UnauthorizedTokenError = NewError(10000004,"鉴权失败，Tokenc错误")
 	UnauthorizedTokenTimeout = NewError(10000005,"鉴权失败，Token超时")
-	UnauthorizedTokenGenerate = NewError(10000005,"鉴权失败，Token生成失败")
+	UnauthorizedTokenGenerate = NewError(10000006,"鉴权失败，Token生成失败")
 	TooManyRequests = NewError(10000007, "请求过多")
 )
