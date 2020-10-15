@@ -2,6 +2,8 @@ package main
 
 import (
 	"github.com/kevinchfe/blog-service/internal/model"
+	"github.com/kevinchfe/blog-service/pkg/logger"
+	"gopkg.in/natefinch/lumberjack.v2"
 	"log"
 	"net/http"
 	"time"
@@ -20,6 +22,10 @@ func init() {
 	err = setupDBEngine()
 	if err != nil {
 		log.Fatalf("init.setupDBEngine err: %v", err)
+	}
+	err = setupLogger()
+	if err != nil {
+		log.Fatalf("init.setupLogger err: %v", err)
 	}
 }
 
@@ -54,6 +60,18 @@ func setupDBEngine() error {
 	return nil
 }
 
+func setupLogger() error {
+	filename := global.AppSetting.LogSavePath + "/" + global.AppSetting.LogFileName + global.AppSetting.LogFileExt
+	global.Logger = logger.NewLogger(&lumberjack.Logger{
+		Filename:  filename,
+		MaxSize:   600,
+		MaxAge:    10,
+		LocalTime: true,
+		Compress:  false,
+	}, "", log.LstdFlags).WithCaller(2)
+	return nil
+}
+
 func main() {
 	gin.SetMode(global.ServerSetting.RunMode)
 	router := routers.NewRouter()
@@ -64,6 +82,7 @@ func main() {
 		WriteTimeout:   global.ServerSetting.WriteTimeOut,
 		MaxHeaderBytes: 1 << 20,
 	}
+	//global.Logger.Infof("%s: go-programming-tour-book/%s", "kevin", "blog_service") //
 	s.ListenAndServe()
 	//r := gin.Default()
 	//r.GET("/ping", func(c *gin.Context) {
