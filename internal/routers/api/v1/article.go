@@ -16,7 +16,7 @@ func NewArticle() Article {
 // @Summary 获取单个文章
 // @Produce json
 // @Param id path int true "文章ID"
-// @Success 200 {object} model.Article "成功"
+// @Success 200 {object} model.ArticleSwagger "成功"
 // @Failure 400 {object} errcode.Error "请求错误"
 // @Failure 500 {object} errcode.Error "内部错误"
 // @Router /api/v1/articles/{id} [get]
@@ -49,7 +49,7 @@ func (a *Article) List(c *gin.Context) {
 // @Param content body string true "文章内容"
 // @Param created_by body int true "创建者"
 // @Param state body int false "状态"
-// @Success 200 {object} model.Article "成功"
+// @Success 200 {object} model.ArticleSwagger "成功"
 // @Failure 400 {object} errcode.Error "请求错误"
 // @Failure 500 {object} errcode.Error "内部错误"
 // @Router /api/v1/articles [post]
@@ -65,7 +65,7 @@ func (a *Article) Create(c *gin.Context) {
 // @Param cover_image_url body string false "封面图片地址"
 // @Param content body string false "文章内容"
 // @Param modified_by body string true "修改者"
-// @Success 200 {object} model.Article "成功"
+// @Success 200 {object} model.ArticleSwagger "成功"
 // @Failure 400 {object} errcode.Error "请求错误"
 // @Failure 500 {object} errcode.Error "内部错误"
 // @Router /api/v1/articles/{id} [put]

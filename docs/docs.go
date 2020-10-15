@@ -157,7 +157,7 @@ var doc = `{
                     "200": {
                         "description": "成功",
                         "schema": {
-                            "$ref": "#/definitions/model.Article"
+                            "$ref": "#/definitions/model.ArticleSwagger"
                         }
                     },
                     "400": {
@@ -194,7 +194,7 @@ var doc = `{
                     "200": {
                         "description": "成功",
                         "schema": {
-                            "$ref": "#/definitions/model.Article"
+                            "$ref": "#/definitions/model.ArticleSwagger"
                         }
                     },
                     "400": {
@@ -271,7 +271,7 @@ var doc = `{
                     "200": {
                         "description": "成功",
                         "schema": {
-                            "$ref": "#/definitions/model.Article"
+                            "$ref": "#/definitions/model.ArticleSwagger"
                         }
                     },
                     "400": {
@@ -428,7 +428,7 @@ var doc = `{
                     "200": {
                         "description": "成功",
                         "schema": {
-                            "$ref": "#/definitions/model.Tag"
+                            "$ref": "#/definitions/model.TagSwagger"
                         }
                     },
                     "400": {
@@ -465,7 +465,7 @@ var doc = `{
                     "200": {
                         "description": "成功",
                         "schema": {
-                            "$ref": "#/definitions/model.Tag"
+                            "$ref": "#/definitions/model.TagSwagger"
                         }
                     },
                     "400": {
@@ -536,7 +536,7 @@ var doc = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/model.Tag"
+                                "$ref": "#/definitions/model.TagSwagger"
                             }
                         }
                     },
