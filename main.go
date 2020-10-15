@@ -72,6 +72,10 @@ func setupLogger() error {
 	return nil
 }
 
+// @title 博客系统
+// @version 1.0
+// @description Go博客项目
+// @termsOfService https://github.com/kevinchfe
 func main() {
 	gin.SetMode(global.ServerSetting.RunMode)
 	router := routers.NewRouter()
