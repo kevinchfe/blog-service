@@ -7,7 +7,7 @@ import (
 
 type Article struct {
 	ID            uint32 `json:"id"`
-	TagID         uint32 `json: "tag_id"`
+	TagID         uint32 `json:"tag_id"`
 	Title         string `json:"title"`
 	Desc          string `json:"desc"`
 	Content       string `json:"content"`
@@ -52,7 +52,7 @@ func (d *Dao) UpdateArticle(param *Article) error {
 }
 
 func (d *Dao) GetArticle(id uint32, state uint8) (model.Article, error) {
-	article := model.Article{Model: &model.Model{ID: id}}
+	article := model.Article{Model: &model.Model{ID: id}, State: state}
 	return article.Get(d.engine)
 }
 

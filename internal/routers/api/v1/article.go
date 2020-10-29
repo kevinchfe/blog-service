@@ -5,6 +5,7 @@ import (
 	"github.com/kevinchfe/blog-service/global"
 	"github.com/kevinchfe/blog-service/internal/service"
 	"github.com/kevinchfe/blog-service/pkg/app"
+	"github.com/kevinchfe/blog-service/pkg/convert"
 	"github.com/kevinchfe/blog-service/pkg/errcode"
 )
 
@@ -23,7 +24,22 @@ func NewArticle() Article {
 // @Failure 500 {object} errcode.Error "内部错误"
 // @Router /api/v1/articles/{id} [get]
 func (a Article) Get(c *gin.Context) {
-	app.NewResponse(c).ToErrorResponse(errcode.ServerError)
+	param := service.ArticleRequest{ID: convert.StrTo(c.Param("id")).MustUInt32()}
+	response := app.NewResponse(c)
+	valid, errs := app.BindAndValid(c, &param)
+	if !valid {
+		global.Logger.Errorf("app.BindAndValid errs: %v", errs)
+		response.ToErrorResponse(errcode.InvalidParams.WithDetails(errs.Errors()...))
+		return
+	}
+	svc := service.New(c.Request.Context())
+	article, err := svc.GetArticle(&param)
+	if err != nil {
+		global.Logger.Errorf("svc.GetArticle err: %v", err)
+		response.ToErrorResponse(errcode.ErrorGetArticleFail)
+		return
+	}
+	response.ToResponse(article)
 	return
 }
 
@@ -39,18 +55,18 @@ func (a Article) Get(c *gin.Context) {
 // @Failure 500 {object} errcode.Error "内部错误"
 // @Router /api/v1/articles [get]
 func (a *Article) List(c *gin.Context) {
-	param := service.ArticleListRequest{}
-	response := app.NewResponse(c)
-	valid,errs := app.BindAndValid(c, &param)
-	if !valid {
-		global.Logger.Errorf("app.BindAndValid errs: %v", errs)
-		response.ToErrorResponse(errcode.InvalidParams.WithDetails(errs.Errors()...))
-		return
-	}
-
-	svc := service.New(c.Request.Context())
-	pager := app.Pager{Page: app.GetPage(c),PageSize: app.GetPageSize(c)}
-	totalRows, err:= svc.
+	//param := service.ArticleListRequest{}
+	//response := app.NewResponse(c)
+	//valid,errs := app.BindAndValid(c, &param)
+	//if !valid {
+	//	global.Logger.Errorf("app.BindAndValid errs: %v", errs)
+	//	response.ToErrorResponse(errcode.InvalidParams.WithDetails(errs.Errors()...))
+	//	return
+	//}
+	//
+	//svc := service.New(c.Request.Context())
+	//pager := app.Pager{Page: app.GetPage(c),PageSize: app.GetPageSize(c)}
+	//totalRows, err:= svc.
 
 }
 
@@ -69,14 +85,22 @@ func (a *Article) List(c *gin.Context) {
 // @Router /api/v1/articles [post]
 func (a *Article) Create(c *gin.Context) {
 	param := service.CreateArticleRequest{}
-	//response := app.NewResponse(c)
+	response := app.NewResponse(c)
 	valid, errs := app.BindAndValid(c, &param)
 	if !valid {
 		global.Logger.Errorf("app.BindAndValid errs: %v", errs)
-		//response.ToErrorResponse(errcode.InvalidParams.WithDetails(errs.Errors())...)
+		response.ToErrorResponse(errcode.InvalidParams.WithDetails(errs.Errors()...))
 		return
 	}
-	//svc := service.
+	svc := service.New(c.Request.Context())
+	err := svc.CreateArticle(&param)
+	if err != nil {
+		global.Logger.Errorf("svc.CreateArticle err: %v", err)
+		response.ToErrorResponse(errcode.ErrorCreateArticleFail)
+		return
+	}
+	response.ToResponse(gin.H{})
+	return
 }
 
 // @Summary 更新文章
@@ -103,5 +127,21 @@ func (a *Article) Update(c *gin.Context) {
 // @Failure 500 {object} errcode.Error "内部错误"
 // @Router /api/v1/articles/{id} [delete]
 func (a *Article) Delete(c *gin.Context) {
-
+	param := service.DeleteArticleRequest{ID: convert.StrTo(c.Param("id")).MustUInt32()}
+	response := app.NewResponse(c)
+	valid, errs := app.BindAndValid(c, &param)
+	if !valid {
+		global.Logger.Errorf("app.BindAndValid errs: %v", errs)
+		response.ToErrorResponse(errcode.InvalidParams.WithDetails(errs.Errors()...))
+		return
+	}
+	svc := service.New(c.Request.Context())
+	err := svc.DeleteArticle(&param)
+	if err != nil {
+		global.Logger.Errorf("svc.Delete err: %v", err)
+		response.ToErrorResponse(errcode.ErrorDeleteArticleFail)
+		return
+	}
+	response.ToResponse(gin.H{})
+	return
 }

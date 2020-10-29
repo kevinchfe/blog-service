@@ -39,7 +39,7 @@ func (a ArticleTag) ListByAIDs(db *gorm.DB, articleIDs []uint32) ([]*ArticleTag,
 }
 
 func (a ArticleTag) Creat(db *gorm.DB) error {
-	if err := db.Count(&a).Error; err != nil {
+	if err := db.Create(&a).Error; err != nil {
 		return err
 	}
 	return nil
