@@ -42,6 +42,7 @@ func (t *Tag) List(c *gin.Context) {
 	if !valid {
 		global.Logger.Errorf("app.BindAndValid errs: %v", errs)
 		response.ToErrorResponse(errcode.InvalidParams.WithDetails(errs.Errors()...))
+		return
 	}
 
 	svc := service.New(c.Request.Context())

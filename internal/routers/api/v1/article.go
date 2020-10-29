@@ -2,6 +2,8 @@ package v1
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/kevinchfe/blog-service/global"
+	"github.com/kevinchfe/blog-service/internal/service"
 	"github.com/kevinchfe/blog-service/pkg/app"
 	"github.com/kevinchfe/blog-service/pkg/errcode"
 )
@@ -37,6 +39,18 @@ func (a Article) Get(c *gin.Context) {
 // @Failure 500 {object} errcode.Error "内部错误"
 // @Router /api/v1/articles [get]
 func (a *Article) List(c *gin.Context) {
+	param := service.ArticleListRequest{}
+	response := app.NewResponse(c)
+	valid,errs := app.BindAndValid(c, &param)
+	if !valid {
+		global.Logger.Errorf("app.BindAndValid errs: %v", errs)
+		response.ToErrorResponse(errcode.InvalidParams.WithDetails(errs.Errors()...))
+		return
+	}
+
+	svc := service.New(c.Request.Context())
+	pager := app.Pager{Page: app.GetPage(c),PageSize: app.GetPageSize(c)}
+	totalRows, err:= svc.
 
 }
 
@@ -54,7 +68,15 @@ func (a *Article) List(c *gin.Context) {
 // @Failure 500 {object} errcode.Error "内部错误"
 // @Router /api/v1/articles [post]
 func (a *Article) Create(c *gin.Context) {
-
+	param := service.CreateArticleRequest{}
+	//response := app.NewResponse(c)
+	valid, errs := app.BindAndValid(c, &param)
+	if !valid {
+		global.Logger.Errorf("app.BindAndValid errs: %v", errs)
+		//response.ToErrorResponse(errcode.InvalidParams.WithDetails(errs.Errors())...)
+		return
+	}
+	//svc := service.
 }
 
 // @Summary 更新文章

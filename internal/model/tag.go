@@ -53,10 +53,15 @@ func (t Tag) Create(db *gorm.DB) error {
 }
 
 func (t Tag) Update(db *gorm.DB, values interface{}) error {
-	return db.Model(&t).Where("id=? AND is_del=?", t.ID, 0).Update(values).Error
+	if err := db.Model(&t).Updates(values).Where("id=? AND is_del=?", t.ID, 0).Error; err != nil {
+		return err
+	}
+	return nil
+
+	//return db.Model(&t).Where("id=? AND is_del=?", t.ID, 0).Update(values).Error
 }
 
 func (t Tag) Delete(db *gorm.DB) error {
-	return db.Model(&t).Where("id=? AND is_del=?",t.ID,0).Delete(&t).Error
+	return db.Model(&t).Where("id=? AND is_del=?", t.ID, 0).Delete(&t).Error
 	//return db.Where("id=? AND is_del=?", t.Model.ID, 0).Delete(&t{}).Error
 }
