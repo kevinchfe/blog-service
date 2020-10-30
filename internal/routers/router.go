@@ -23,18 +23,26 @@ func NewRouter() *gin.Engine {
 
 	apiv1 := r.Group("/api/v1")
 	{
+		// 创建标签
 		apiv1.POST("/tags", tag.Create)
+		// 删除指定标签
 		apiv1.DELETE("tags/:id", tag.Delete)
+		// 更新标签
 		apiv1.PUT("/tags/:id", tag.Update)
-		apiv1.PATCH("/tags/:id/state", tag.Update)
+		// 标签列表
 		apiv1.GET("/tags", tag.List)
+		// 获取指定标签
 		apiv1.GET("/tags/:id", tag.Get)
 
+		// 创建文章
 		apiv1.POST("/articles", article.Create)
+		// 删除指定文章
 		apiv1.DELETE("/article/:id", article.Delete)
+		// 更新指定文章
 		apiv1.PUT("/article/:id", article.Update)
-		apiv1.PATCH("/article/:id/state", article.Update)
+		// 文章列表
 		apiv1.GET("/articles", article.List)
+		// 获取指定文章
 		apiv1.GET("/articles/:id", article.Get)
 	}
 	return r

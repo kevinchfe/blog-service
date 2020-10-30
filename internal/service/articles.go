@@ -28,11 +28,11 @@ type CreateArticleRequest struct {
 
 type UpdateArticleRequest struct {
 	ID            uint32 `form:"id" binding:"required,gte=1"`
-	TagID         uint32 `form:'tag_id' binding:"required,min=2,max=100"`
+	TagID         uint32 `form:"tag_id"" binding:"required,min=2,max=100"`
 	Title         string `form:"title" bind:"min=2,max=100"`
-	Desc          string `form:"desc" binding:"required,min=2,max=255"`
-	Content       string `form:"content" binding:"required,min=2,max=4294967295"`
-	CoverImageUrl string `form:"cover_image_url" binding:"requreid,url"`
+	Desc          string `form:"desc" binding:"min=2,max=255"`
+	Content       string `form:"content" binding:"min=2,max=4294967295"`
+	CoverImageUrl string `form:"cover_image_url" binding:"url"`
 	ModifiedBy    string `form:"modified_by" bind:"required,min=2,max=100"`
 	State         uint8  `form:"state,default=1" binding:"oneof=0 1"`
 }

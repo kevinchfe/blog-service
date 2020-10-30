@@ -55,19 +55,25 @@ func (a Article) Get(c *gin.Context) {
 // @Failure 500 {object} errcode.Error "内部错误"
 // @Router /api/v1/articles [get]
 func (a *Article) List(c *gin.Context) {
-	//param := service.ArticleListRequest{}
-	//response := app.NewResponse(c)
-	//valid,errs := app.BindAndValid(c, &param)
-	//if !valid {
-	//	global.Logger.Errorf("app.BindAndValid errs: %v", errs)
-	//	response.ToErrorResponse(errcode.InvalidParams.WithDetails(errs.Errors()...))
-	//	return
-	//}
-	//
-	//svc := service.New(c.Request.Context())
-	//pager := app.Pager{Page: app.GetPage(c),PageSize: app.GetPageSize(c)}
-	//totalRows, err:= svc.
+	param := service.ArticleListRequest{}
+	response := app.NewResponse(c)
+	valid, errs := app.BindAndValid(c, &param)
+	if !valid {
+		global.Logger.Errorf("app.BindAndValid errs: %v", errs)
+		response.ToErrorResponse(errcode.InvalidParams.WithDetails(errs.Errors()...))
+		return
+	}
 
+	svc := service.New(c.Request.Context())
+	pager := app.Pager{Page: app.GetPage(c), PageSize: app.GetPageSize(c)}
+	articles, totalRows, err := svc.GetArticleList(&param, &pager)
+	if err != nil {
+		global.Logger.Errorf("svc.GetArticleList err: %v", err)
+		response.ToErrorResponse(errcode.ErrorGetArticlesFail)
+		return
+	}
+	response.ToResponseList(articles, totalRows)
+	return
 }
 
 // @Summary 创建文章
@@ -116,7 +122,23 @@ func (a *Article) Create(c *gin.Context) {
 // @Failure 500 {object} errcode.Error "内部错误"
 // @Router /api/v1/articles/{id} [put]
 func (a *Article) Update(c *gin.Context) {
-
+	param := service.UpdateArticleRequest{ID: convert.StrTo(c.Param("id")).MustUInt32()}
+	response := app.NewResponse(c)
+	valid, errs := app.BindAndValid(c, &param)
+	if !valid {
+		global.Logger.Errorf("app.BindAndValid errs: %v", errs)
+		response.ToErrorResponse(errcode.InvalidParams.WithDetails(errs.Errors()...))
+		return
+	}
+	svc := service.New(c.Request.Context())
+	err := svc.UpdateArticle(&param)
+	if err != nil {
+		global.Logger.Errorf("svc.UpdateArticle err: %v", err)
+		response.ToErrorResponse(errcode.ErrorUpdateArticleFail)
+		return
+	}
+	response.ToResponse(gin.H{})
+	return
 }
 
 // @Summary 删除文章

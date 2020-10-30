@@ -23,6 +23,23 @@ func NewTag() Tag {
 // @Failure 500 {object} errcode.Error "内部错误"
 // @Router /api/v1/tags/{id} [get]
 func (t *Tag) Get(c *gin.Context) {
+	param := service.GetTagRequest{ID: convert.StrTo(c.Param("id")).MustUInt32()}
+	response := app.NewResponse(c)
+	valid, errs := app.BindAndValid(c, &param)
+	if !valid {
+		global.Logger.Errorf("app.BindAndValid errs: %v", errs)
+		response.ToErrorResponse(errcode.InvalidParams.WithDetails(errs.Errors()...))
+		return
+	}
+	svc := service.New(c.Request.Context())
+	tag, err := svc.GetTag(&param)
+	if err != nil {
+		global.Logger.Errorf("svc.GetTag err: %v", err)
+		response.ToErrorResponse(errcode.ErrorGetTagListFail)
+		return
+	}
+	response.ToResponse(tag)
+	return
 }
 
 // @Summary 获取多个标签
