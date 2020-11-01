@@ -9,6 +9,7 @@ type Tag struct {
 	*Model
 	Name  string `json:"name"`
 	State uint8  `json:"state"`
+	CreatedBy string `json:"created_by"`
 }
 
 type TagSwagger struct {

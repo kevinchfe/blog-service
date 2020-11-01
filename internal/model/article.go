@@ -22,6 +22,7 @@ type ArticleRow struct {
 	ArticleDesc   string
 	CoverImageUrl string
 	Content       string
+	CreatedBy     string
 }
 
 type ArticleSwagger struct {
@@ -66,7 +67,7 @@ func (a Article) Delete(db *gorm.DB) error {
 
 func (a Article) ListByTagID(db *gorm.DB, tagID uint32, pageOffset, pageSize int) ([]*ArticleRow, error) {
 	fields := []string{"ar.id AS article_id", "ar.title AS article_title", "ar.desc AS article_desc", "ar.cover_image_url", "ar.content"}
-	fields = append(fields, []string{"t.id AS tag_id", "t.name AS tag_name"}...)
+	fields = append(fields, []string{"t.id AS tag_id", "t.name AS tag_name","t.created_by as created_by"}...)
 
 	if pageOffset >= 0 && pageSize > 0 {
 		db = db.Offset(pageOffset).Limit(pageSize)
@@ -83,7 +84,7 @@ func (a Article) ListByTagID(db *gorm.DB, tagID uint32, pageOffset, pageSize int
 	var articles []*ArticleRow
 	for rows.Next() {
 		r := &ArticleRow{}
-		if err := rows.Scan(&r.ArticleID, &r.ArticleTitle, &r.ArticleDesc, &r.CoverImageUrl, &r.Content, &r.TagID, &r.TagName); err != nil {
+		if err := rows.Scan(&r.ArticleID, &r.ArticleTitle, &r.ArticleDesc, &r.CoverImageUrl, &r.Content, &r.TagID, &r.TagName, &r.CreatedBy); err != nil {
 			return nil, err
 		}
 		articles = append(articles, r)

@@ -95,7 +95,7 @@ func (svc *Service) GetArticleList(param *ArticleListRequest, pager *app.Pager) 
 			Desc:          article.ArticleDesc,
 			Content:       article.Content,
 			CoverImageUrl: article.CoverImageUrl,
-			Tag:           &model.Tag{Model: &model.Model{ID: article.TagID}, Name: article.TagName},
+			Tag:           &model.Tag{Model: &model.Model{ID: article.TagID}, Name: article.TagName, CreatedBy: article.CreatedBy},
 		})
 	}
 	return articleList, articleCount, nil
